@@ -6,15 +6,16 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "DZNPhotoPickerController.h"
 
 @protocol KTSecretViewControllerDelegate;
 
 /*!
  *  View Controller that hosts the secret view.
  */
-@interface KTSecretViewController : UIViewController
+@interface KTSecretViewController : UIViewController<DZNPhotoPickerControllerDelegate>
 
-@property (nonatomic, weak) id<KTSecretViewControllerDelegate> delegate;
+@property (nonatomic, weak) id<KTSecretViewControllerDelegate,UIActionSheetDelegate, UINavigationControllerDelegate, UIPopoverControllerDelegate> delegate;
 
 @end
 

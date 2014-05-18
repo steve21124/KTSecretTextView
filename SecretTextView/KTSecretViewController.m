@@ -13,12 +13,15 @@
 #import "UIColor+KTColorUtils.h"
 #import "KTImageUtil.h"
 #import "UIImage+Resize.h"
+#import "Private.h"
 @import AssetsLibrary;
 @import MobileCoreServices;
 
 
 static NSInteger const kKTSecretViewControllerPhotoAlertViewTakePhoto = 1;
 static NSInteger const kKTSecretViewControllerPhotoAlertViewChooseFromLibrary = 2;
+static NSInteger const kKTSecretViewControllerPhotoAlertViewSearchPhoto = 3;
+
 
 static NSInteger const kKTSecretViewControllerRemovePhotoAlertViewRemovePhoto = 1;
 static NSInteger const kKTSecretViewControllerRemovePhotoAlertViewTakePhoto = 2;
@@ -74,6 +77,28 @@ UINavigationControllerDelegate
 #pragma mark - Public
 
 #pragma mark - View lifecycle
++ (void)initialize
+{
+    [DZNPhotoPickerController registerService:DZNPhotoPickerControllerService500px
+                                  consumerKey:k500pxConsumerKey
+                               consumerSecret:k500pxConsumerSecret
+                                 subscription:DZNPhotoPickerControllerSubscriptionFree];
+    
+    [DZNPhotoPickerController registerService:DZNPhotoPickerControllerServiceFlickr
+                                  consumerKey:kFlickrConsumerKey
+                               consumerSecret:kFlickrConsumerSecret
+                                 subscription:DZNPhotoPickerControllerSubscriptionFree];
+    
+    [DZNPhotoPickerController registerService:DZNPhotoPickerControllerServiceInstagram
+                                  consumerKey:kInstagramConsumerKey
+                               consumerSecret:kInstagramConsumerSecret
+                                 subscription:DZNPhotoPickerControllerSubscriptionFree];
+    
+    [DZNPhotoPickerController registerService:DZNPhotoPickerControllerServiceGoogleImages
+                                  consumerKey:kGoogleImagesConsumerKey
+                               consumerSecret:kGoogleImagesSearchEngineID
+                                 subscription:DZNPhotoPickerControllerSubscriptionFree];
+}
 
 - (void)viewDidLoad
 {
@@ -81,6 +106,7 @@ UINavigationControllerDelegate
     [self setupNavigationBar];
     [self addSubviewTree];
     [self constrainViews];
+    
 }
 
 - (void)loadView
@@ -204,9 +230,12 @@ UINavigationControllerDelegate
 - (UIAlertView*) photosAlertView
 {
     if (!_photosAlertView) {
-        _photosAlertView = [[UIAlertView alloc] initWithTitle:nil message:nil delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", nil) otherButtonTitles:
-                                                     NSLocalizedString(@"Take photo", nil),
-                                                     NSLocalizedString(@"Choose from library", nil), nil];
+        _photosAlertView = [[UIAlertView alloc] initWithTitle:nil message:nil delegate:self
+        cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
+        otherButtonTitles: NSLocalizedString(@"Take photo", nil),
+                           NSLocalizedString(@"Choose from library", nil),
+                           NSLocalizedString(@"Search photo", nil),
+                           nil];
     }
     return _photosAlertView;
 }
@@ -403,6 +432,22 @@ UINavigationControllerDelegate
     
 }
 
+- (void)didSelectCancelButton:(UIButton*)sender
+{
+    // hide button before taking snapshot
+    self.backgroundInfoLabel.hidden = YES;
+    self.backgroundInfoLabelBackgroundView.hidden = YES;
+    self.photosButton.hidden = YES;
+    [self.textView resignFirstResponder];
+    
+    self.photosButton.hidden = NO;
+    self.backgroundInfoLabel.hidden = NO;
+    self.backgroundInfoLabelBackgroundView.hidden = NO;
+    
+    [self dismissViewControllerAnimated:YES completion:nil];
+    
+}
+
 - (void)didSelectPhotosButton:(UIButton*)sender
 {
     if (!self.photosEditorViewController.selectedImage) {
@@ -422,6 +467,7 @@ UINavigationControllerDelegate
         picker.allowsEditing = YES;
         picker.delegate = self;
         [self presentViewController:picker animated:YES completion:nil];
+
     }
     
 }
@@ -436,6 +482,18 @@ UINavigationControllerDelegate
     }
     
 }
+
+- (void)handleSearchPhoto
+{
+    DZNPhotoPickerController *picker = [[DZNPhotoPickerController alloc] init];
+    picker.supportedServices = DZNPhotoPickerControllerService500px | DZNPhotoPickerControllerServiceFlickr | DZNPhotoPickerControllerServiceGoogleImages;
+    picker.allowsEditing = NO;
+    picker.enablePhotoDownload = YES;
+    picker.delegate = self;
+    [self presentViewController:picker animated:YES completion:nil];
+    
+}
+
 
 #pragma mark - select photos methods
 
@@ -542,6 +600,9 @@ UINavigationControllerDelegate
             case kKTSecretViewControllerPhotoAlertViewChooseFromLibrary:
                 [self handleChoosePhotoFromLibrary];
                 break;
+            case kKTSecretViewControllerPhotoAlertViewSearchPhoto:
+                [self handleSearchPhoto];
+                break;
             default:
                 break;
         }
@@ -591,6 +652,45 @@ UINavigationControllerDelegate
     return viewForHitTest;
 }
 
+#pragma mark - DZNPhotoPickerControllerDelegate
+- (void)photoPickerController:(DZNPhotoPickerController *)picker didFinishPickingPhotoWithInfo:(NSDictionary *)userInfo{
+    NSLog(@"finish picking");
+    
+    
+    // to-do: resize image
+    UIImage *selectedImage = userInfo[UIImagePickerControllerOriginalImage];
+    [self showPhotoEditorView];
+    self.photosEditorViewController.view.hidden = NO;
+    CGSize imageRect = self.photosEditorViewController.view.frame.size;
+    UIImage *resizedImage = [selectedImage resizedImageToFitInSize:imageRect scaleIfSmaller:YES];
+    self.photosEditorViewController.selectedImage = resizedImage;
+    [picker dismissViewControllerAnimated:YES completion:nil];
+    
+
+    /*
+    NSLog(userInfo);
+    
+    DZNPhotoPickerControllerCropMode = "-1";
+    DZNPhotoPickerControllerCropZoomScale = 1;
+    DZNPhotoPickerControllerPhotoMetadata =     {
+        "author_name" = "Christophe Bargues";
+        "author_profile_url" = "http://500px.com/Forcerouge";
+        "author_username" = Forcerouge;
+        "source_detail_url" = "http://500px.com/photo/70861841";
+        "source_id" = 70861841;
+        "source_name" = 500px;
+        "source_url" = "http://ppcdn.500px.org/70861841/f8bd5a9488f0c9623b795d4ee384df1f53c2423d/4.jpg";
+    };
+    UIImagePickerControllerCropRect = "NSRect: {{0, 0}, {0, 0}}";
+    UIImagePickerControllerMediaType = "public.image";
+    UIImagePickerControllerOriginalImage = "<UIImage: 0xb3aa3c0>";
+    */
+}
+
+- (void)photoPickerControllerDidCancel:(DZNPhotoPickerController *)picker{
+    [picker dismissViewControllerAnimated:YES completion:nil];
+
+}
 
 
 @end

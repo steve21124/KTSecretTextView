@@ -11,5 +11,5 @@ Pod::Spec.new do |s|
   s.resources 		= 'SecretTextView/Resources/**/*.*'
   s.source_files 	= 'SecretTextView/**/*.{h,m}'
   s.requires_arc = true
-  s.dependency 'UIImage-Resize'
+  s.dependency 'UIImage-Resize','DZNPhotoPickerController'
 end
