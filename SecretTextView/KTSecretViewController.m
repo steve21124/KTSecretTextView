@@ -450,11 +450,15 @@ UINavigationControllerDelegate
 
 - (void)didSelectPhotosButton:(UIButton*)sender
 {
-    if (!self.photosEditorViewController.selectedImage) {
-        [self.photosAlertView show];
-    }else{
-        [self.removePhotosAlertView show];
-    }
+    //always show photoAlerts
+    [self.photosAlertView show];
+    
+    
+    //if (!self.photosEditorViewController.selectedImage) {
+    //    [self.photosAlertView show];
+    //}else{
+    //    [self.removePhotosAlertView show];
+    //}
     
 }
 
