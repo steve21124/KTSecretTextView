@@ -13,4 +13,5 @@ Pod::Spec.new do |s|
   s.requires_arc = true
   s.dependency 'UIImage-Resize'
   s.dependency 'DZNPhotoPickerController'
+  s.ios.frameworks = 'Accounts',  'Social'
 end
