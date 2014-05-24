@@ -7,13 +7,16 @@
 
 #import <UIKit/UIKit.h>
 #import "DZNPhotoPickerController.h"
+#import "GrabKit.h"
+#import "GRKPickerViewController.h"
+#import "GRKAlbum.h"
 
 @protocol KTSecretViewControllerDelegate;
 
 /*!
  *  View Controller that hosts the secret view.
  */
-@interface KTSecretViewController : UIViewController<DZNPhotoPickerControllerDelegate>
+@interface KTSecretViewController : UIViewController<DZNPhotoPickerControllerDelegate,GRKPickerViewControllerDelegate>
 
 @property (nonatomic, weak) id<KTSecretViewControllerDelegate,UIActionSheetDelegate, UINavigationControllerDelegate, UIPopoverControllerDelegate> delegate;
 

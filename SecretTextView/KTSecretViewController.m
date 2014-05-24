@@ -20,7 +20,8 @@
 
 static NSInteger const kKTSecretViewControllerPhotoAlertViewTakePhoto = 1;
 static NSInteger const kKTSecretViewControllerPhotoAlertViewChooseFromLibrary = 2;
-static NSInteger const kKTSecretViewControllerPhotoAlertViewSearchPhoto = 3;
+static NSInteger const kKTSecretViewControllerPhotoAlertViewChooseFromSocialNetwork = 3;
+static NSInteger const kKTSecretViewControllerPhotoAlertViewSearchPhoto = 4;
 
 
 static NSInteger const kKTSecretViewControllerRemovePhotoAlertViewRemovePhoto = 1;
@@ -94,10 +95,7 @@ UINavigationControllerDelegate
                                consumerSecret:kInstagramConsumerSecret
                                  subscription:DZNPhotoPickerControllerSubscriptionFree];
     
-    [DZNPhotoPickerController registerService:DZNPhotoPickerControllerServiceGoogleImages
-                                  consumerKey:kGoogleImagesConsumerKey
-                               consumerSecret:kGoogleImagesSearchEngineID
-                                 subscription:DZNPhotoPickerControllerSubscriptionFree];
+    
 }
 
 - (void)viewDidLoad
@@ -231,11 +229,12 @@ UINavigationControllerDelegate
 {
     if (!_photosAlertView) {
         _photosAlertView = [[UIAlertView alloc] initWithTitle:nil message:nil delegate:self
-        cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
-        otherButtonTitles: NSLocalizedString(@"Take photo", nil),
-                           NSLocalizedString(@"Choose from library", nil),
-                           NSLocalizedString(@"Search photo", nil),
-                           nil];
+                                            cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
+                                            otherButtonTitles: NSLocalizedString(@"Take photo", nil),
+                            NSLocalizedString(@"Choose from library", nil),
+                            NSLocalizedString(@"Choose from Social Network", nil),
+                            NSLocalizedString(@"Search photo", nil),
+                            nil];
     }
     return _photosAlertView;
 }
@@ -244,9 +243,9 @@ UINavigationControllerDelegate
 {
     if (!_removePhotosAlertView) {
         _removePhotosAlertView = [[UIAlertView alloc] initWithTitle:nil message:nil delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", nil) otherButtonTitles:
-                            NSLocalizedString(@"Remove photo", nil),
-                            NSLocalizedString(@"Take photo", nil),
-                            NSLocalizedString(@"Choose from library", nil), nil];
+                                  NSLocalizedString(@"Remove photo", nil),
+                                  NSLocalizedString(@"Take photo", nil),
+                                  NSLocalizedString(@"Choose from library", nil), nil];
     }
     return _removePhotosAlertView;
 }
@@ -396,7 +395,7 @@ UINavigationControllerDelegate
     self.backgroundInfoLabelBackgroundView.alpha = 0.2f;
     self.backgroundInfoLabel.hidden = NO;
     self.backgroundInfoLabelBackgroundView.hidden = NO;
-
+    
     self.backgroundInfoLabel.text = text;
     
     [UIView animateWithDuration:0.5f delay:1.0f options:UIViewAnimationOptionCurveEaseOut animations:^{
@@ -471,7 +470,7 @@ UINavigationControllerDelegate
         picker.allowsEditing = YES;
         picker.delegate = self;
         [self presentViewController:picker animated:YES completion:nil];
-
+        
     }
     
 }
@@ -486,11 +485,16 @@ UINavigationControllerDelegate
     }
     
 }
+- (void)handleChoosePhotoFromSocialNetwork
+{
+    
+    
+}
 
 - (void)handleSearchPhoto
 {
     DZNPhotoPickerController *picker = [[DZNPhotoPickerController alloc] init];
-    picker.supportedServices = DZNPhotoPickerControllerService500px | DZNPhotoPickerControllerServiceFlickr | DZNPhotoPickerControllerServiceGoogleImages;
+    picker.supportedServices = DZNPhotoPickerControllerService500px | DZNPhotoPickerControllerServiceFlickr | DZNPhotoPickerControllerServiceInstagram;
     picker.allowsEditing = NO;
     picker.enablePhotoDownload = YES;
     picker.delegate = self;
@@ -594,17 +598,20 @@ UINavigationControllerDelegate
 
 #pragma mark - UIAlertViewDelegate methods
 
- - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if (alertView == self.photosAlertView) {
         switch (buttonIndex) {
-            case kKTSecretViewControllerPhotoAlertViewTakePhoto:
+                case kKTSecretViewControllerPhotoAlertViewTakePhoto:
                 [self handleTakePhoto];
                 break;
-            case kKTSecretViewControllerPhotoAlertViewChooseFromLibrary:
+                case kKTSecretViewControllerPhotoAlertViewChooseFromLibrary:
                 [self handleChoosePhotoFromLibrary];
                 break;
-            case kKTSecretViewControllerPhotoAlertViewSearchPhoto:
+                case kKTSecretViewControllerPhotoAlertViewChooseFromSocialNetwork:
+                [self handleChoosePhotoFromSocialNetwork];
+                break;
+                case kKTSecretViewControllerPhotoAlertViewSearchPhoto:
                 [self handleSearchPhoto];
                 break;
             default:
@@ -613,13 +620,13 @@ UINavigationControllerDelegate
         
     }else if (alertView == self.removePhotosAlertView) {
         switch (buttonIndex) {
-            case kKTSecretViewControllerRemovePhotoAlertViewRemovePhoto:
+                case kKTSecretViewControllerRemovePhotoAlertViewRemovePhoto:
                 [self removeSelectedImageFromView];
                 break;
-            case kKTSecretViewControllerRemovePhotoAlertViewTakePhoto:
+                case kKTSecretViewControllerRemovePhotoAlertViewTakePhoto:
                 [self handleTakePhoto];
                 break;
-            case kKTSecretViewControllerRemovePhotoAlertViewChooseFromLibrary:
+                case kKTSecretViewControllerRemovePhotoAlertViewChooseFromLibrary:
                 [self handleChoosePhotoFromLibrary];
                 break;
             default:
@@ -670,30 +677,30 @@ UINavigationControllerDelegate
     self.photosEditorViewController.selectedImage = resizedImage;
     [picker dismissViewControllerAnimated:YES completion:nil];
     
-
-    /*
-    NSLog(userInfo);
     
-    DZNPhotoPickerControllerCropMode = "-1";
-    DZNPhotoPickerControllerCropZoomScale = 1;
-    DZNPhotoPickerControllerPhotoMetadata =     {
-        "author_name" = "Christophe Bargues";
-        "author_profile_url" = "http://500px.com/Forcerouge";
-        "author_username" = Forcerouge;
-        "source_detail_url" = "http://500px.com/photo/70861841";
-        "source_id" = 70861841;
-        "source_name" = 500px;
-        "source_url" = "http://ppcdn.500px.org/70861841/f8bd5a9488f0c9623b795d4ee384df1f53c2423d/4.jpg";
-    };
-    UIImagePickerControllerCropRect = "NSRect: {{0, 0}, {0, 0}}";
-    UIImagePickerControllerMediaType = "public.image";
-    UIImagePickerControllerOriginalImage = "<UIImage: 0xb3aa3c0>";
-    */
+    /*
+     NSLog(userInfo);
+     
+     DZNPhotoPickerControllerCropMode = "-1";
+     DZNPhotoPickerControllerCropZoomScale = 1;
+     DZNPhotoPickerControllerPhotoMetadata =     {
+     "author_name" = "Christophe Bargues";
+     "author_profile_url" = "http://500px.com/Forcerouge";
+     "author_username" = Forcerouge;
+     "source_detail_url" = "http://500px.com/photo/70861841";
+     "source_id" = 70861841;
+     "source_name" = 500px;
+     "source_url" = "http://ppcdn.500px.org/70861841/f8bd5a9488f0c9623b795d4ee384df1f53c2423d/4.jpg";
+     };
+     UIImagePickerControllerCropRect = "NSRect: {{0, 0}, {0, 0}}";
+     UIImagePickerControllerMediaType = "public.image";
+     UIImagePickerControllerOriginalImage = "<UIImage: 0xb3aa3c0>";
+     */
 }
 
 - (void)photoPickerControllerDidCancel:(DZNPhotoPickerController *)picker{
     [picker dismissViewControllerAnimated:YES completion:nil];
-
+    
 }
 
 
