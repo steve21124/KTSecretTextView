@@ -11,7 +11,7 @@
  * For more information about where to generate this token, please refere to DZNPhotoPickerControllerConstants.h documentation.
  */
 
-#define k500pxConsumerKey               @"2"
+#define k500pxConsumerKey               @""
 #define k500pxConsumerSecret            @""
 
 #define kFlickrConsumerKey              @""

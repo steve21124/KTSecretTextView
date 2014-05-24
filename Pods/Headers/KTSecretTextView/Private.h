@@ -1,1 +1,1 @@
-../../KTSecretTextView/SecretTextView/Private.h
+../../KTSecretTextView/SecretTextView/Config/Private.h

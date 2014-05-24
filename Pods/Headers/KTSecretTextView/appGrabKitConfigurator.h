@@ -1,1 +1,1 @@
-../../KTSecretTextView/SecretTextView/SocialPhotoPicker/appGrabKitConfigurator.h
+../../KTSecretTextView/SecretTextView/Config/appGrabKitConfigurator.h
