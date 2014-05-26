@@ -1,1 +1,0 @@
-../../KTSecretTextView/SecretTextView/Config/appGrabKitConfigurator.h

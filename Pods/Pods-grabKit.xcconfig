@@ -1,2 +1,0 @@
-PODS_GRABKIT_HEADER_SEARCH_PATHS = $(SDKROOT)/usr/include/libxml2
-PODS_GRABKIT_OTHER_LDFLAGS = -framework Accounts -framework AdSupport -framework AssetsLibrary -framework CFNetwork -framework QuartzCore -framework Security -framework Social -framework SystemConfiguration
