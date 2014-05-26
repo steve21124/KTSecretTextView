@@ -14,8 +14,8 @@
 #define k500pxConsumerKey               @""
 #define k500pxConsumerSecret            @""
 
-#define kFlickrConsumerKey              @""
-#define kFlickrConsumerSecret           @""
+#define kFlickrConsumerKey              @"cba7a67b9ce1b3e583a2528f4f78e398"  //image quote api
+#define kFlickrConsumerSecret           @"5ddd00a18d234347"
 
 #define kInstagramConsumerKey           @""
 #define kInstagramConsumerSecret        @""

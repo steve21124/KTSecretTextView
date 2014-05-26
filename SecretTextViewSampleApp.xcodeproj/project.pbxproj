@@ -20,6 +20,7 @@
 		8EC40ED31910706B0048D85F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8EC40EBB1910706B0048D85F /* UIKit.framework */; };
 		8EC40EDB1910706B0048D85F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8EC40ED91910706B0048D85F /* InfoPlist.strings */; };
 		8EC40EDD1910706B0048D85F /* SecretTextViewSampleAppTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EC40EDC1910706B0048D85F /* SecretTextViewSampleAppTests.m */; };
+		AA91C96E19310454008ABACC /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA91C96D19310454008ABACC /* Social.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +56,7 @@
 		8EC40ED81910706B0048D85F /* SecretTextViewSampleAppTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "SecretTextViewSampleAppTests-Info.plist"; sourceTree = "<group>"; };
 		8EC40EDA1910706B0048D85F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		8EC40EDC1910706B0048D85F /* SecretTextViewSampleAppTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SecretTextViewSampleAppTests.m; sourceTree = "<group>"; };
+		AA91C96D19310454008ABACC /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,6 +64,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AA91C96E19310454008ABACC /* Social.framework in Frameworks */,
 				8EC40EBA1910706B0048D85F /* CoreGraphics.framework in Frameworks */,
 				8EC40EBC1910706B0048D85F /* UIKit.framework in Frameworks */,
 				8EC40EB81910706B0048D85F /* Foundation.framework in Frameworks */,
@@ -105,6 +108,7 @@
 		8EC40EB61910706B0048D85F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				AA91C96D19310454008ABACC /* Social.framework */,
 				8EC40EB71910706B0048D85F /* Foundation.framework */,
 				8EC40EB91910706B0048D85F /* CoreGraphics.framework */,
 				8EC40EBB1910706B0048D85F /* UIKit.framework */,
